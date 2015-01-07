@@ -53,3 +53,8 @@
             processBlock= averageLightness;
             toChar= toChar
         }
+        
+    let asciiArt = processBitmap defaultConversionBehavior
+
+    let artFromFile (file:string) = 
+        new Bitmap(file) |> asciiArt
