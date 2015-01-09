@@ -13,8 +13,8 @@ open BitmapProcessing
 open CharacterMapping
 open Defaults
 
-
-
-        
-    
+//Ideas:
+//maybe a cutoff or a contrast sensitivity?     
+//Parallelize   
+  
     

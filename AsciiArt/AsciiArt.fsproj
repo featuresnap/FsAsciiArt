@@ -60,7 +60,7 @@
     <Resource Include="ApplicationResources.xaml" />
     <Resource Include="MainWindow.xaml" />
     <Content Include="packages.config" />
-    <None Include="Script1.fsx" />
+    <None Include="Loader.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />

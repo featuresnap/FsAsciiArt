@@ -7,6 +7,12 @@
     open Array2D.Extensions
 
     let defaultFont = makeFont "Courier New" 12
+
+    let simpleCharMap = function
+        |bright when bright < 0.25f -> '#'
+        |bright when bright < 0.50f -> '('
+        |bright when bright < 0.75f -> '.'
+        |_ -> ' '
     
     let defaultLightnessMap = 
        
@@ -16,22 +22,23 @@
         
         let cons a b = a :: b
 
-        let toKeyedPairs maxKey values = 
+        let distributeOverInterval (min, max) values = 
             let count = values |> List.length
-            let slope = (float maxKey) / (float count)
-            values |> List.mapi (fun i value -> (float i * slope) |> float32, value)
+            let slope = (float (max - min)) / (float count)
+            values 
+            |> List.mapi (fun i value -> (float i * slope) |> float32, value)
         
         [ 0..255 ]
         |> Seq.map char
         |> Seq.filter isValidChar
         |> Seq.groupBy darknessValue
-        |> Seq.where (fun (dark, _) -> dark > 0)
+        |> Seq.where (fun (darkness, _) -> darkness > 0)
         |> Seq.map (fun (dark, chars) -> (dark, Seq.head (chars)))
         |> Seq.sortBy fst
         |> Seq.map snd
         |> List.ofSeq
         |> List.rev
-        |> toKeyedPairs 1.0f
+        |> distributeOverInterval (0.0f, 1.0f)
         |> List.rev
         |> cons (1.0f, ' ')
 
