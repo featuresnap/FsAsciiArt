@@ -8,7 +8,7 @@
 
     let defaultFont = makeFont "Courier New" 12
 
-    let simpleCharMap = function
+    let simpleLightnessMap = function
         |bright when bright < 0.25f -> '#'
         |bright when bright < 0.50f -> '('
         |bright when bright < 0.75f -> '.'
@@ -22,11 +22,13 @@
         
         let cons a b = a :: b
 
-        let distributeOverInterval (min, max) values = 
+        let darkness = fst
+
+        let distributeOverInterval (start, end') values = 
             let count = values |> List.length
-            let slope = (float (max - min)) / (float count)
+            let slope = (float (end' - start)) / (float count)
             values 
-            |> List.mapi (fun i value -> (float i * slope) |> float32, value)
+            |> List.mapi (fun i value -> (float i * slope + float start) |> float32, value)
         
         [ 0..255 ]
         |> Seq.map char
@@ -34,13 +36,11 @@
         |> Seq.groupBy darknessValue
         |> Seq.where (fun (darkness, _) -> darkness > 0)
         |> Seq.map (fun (dark, chars) -> (dark, Seq.head (chars)))
-        |> Seq.sortBy fst
+        |> Seq.sortBy darkness
         |> Seq.map snd
         |> List.ofSeq
-        |> List.rev
-        |> distributeOverInterval (0.0f, 1.0f)
-        |> List.rev
-        |> cons (1.0f, ' ')
+        |> cons ' '
+        |> distributeOverInterval (1.0f, 0.0f)
 
     let toChar (brightness:float32) =
         let b = brightness
